@@ -47,8 +47,6 @@ void DetectRoadLine(Mat src, Mat &ROI) {
 //    第五个参数：int类型的type，阈值类型
     threshold(gray,thresh,180,255,THRESH_BINARY);
 
-
-
     imshow("ROI2",thresh);
     vector<Point> left_line;
     vector<Point> right_line;
@@ -85,16 +83,20 @@ void DetectRoadLine(Mat src, Mat &ROI) {
         circle(src,B_L,10,Scalar(0,0,255),-1 );
         circle(src,T_L,10,Scalar(0,255,0),-1 );
         circle(src,T_R,10,Scalar(255,0,0),-1 );
-        circle(src,B_R,10,Scalar(0,255,255),-1 );
+//        circle(src,B_R,10,Scalar(0,255,255),-1 );
+        circle(src,B_R,10,Scalar(128,0,128),-1 );
 
         line(src,Point(B_L),Point(T_L),Scalar(0,255,0),10);
-        line(src,Point(B_L),Point(T_L),Scalar(0,255,0),10);
+        line(src,Point(T_R),Point(B_R),Scalar(0,255,0),10);
 
         vector<Point> pts;
-        pts = {B_L,T_L,T_R,B_R};
+//        pts = {B_L,T_L,T_R,B_R};
+       pts = {B_L,T_L,T_R,B_R};
         vector<vector<Point>> ppts;
         ppts.push_back(pts);
-        fillPoly(src,ppts,Scalar(133,230,238));
+//        fillPoly(src,ppts,Scalar(133,230,238));
+        fillPoly(src,ppts,Scalar(50,205,50));
+//        addWeighted( src, 0.5,src, 0.5, 0,src);
 
     }
 
@@ -118,24 +120,24 @@ bool executeimp(Mat src,Mat &dst,Point2d p1,Point2d p2,Point2d p3,
         float N=5;
         //保证逆透视图的宽度大概为N个车头宽
         float sacale=(IPM_WIDTH/N)/ROI_WIDTH;
-        float IPM_HEIGHT=ROI_HEIGHT*sacale;
+        float IPM_HEIGHT=ROI_HEIGHT * sacale;
 
 
-        cout << IPM_WIDTH/2-IPM_WIDTH/(2*N)<<endl;
-        cout << IPM_WIDTH/2+IPM_WIDTH/(2*N)<<endl;
-        cout << IPM_HEIGHT<<endl;
+//        cout << IPM_WIDTH/2-IPM_WIDTH/(2*N)<<endl;
+//        cout << IPM_WIDTH/2+IPM_WIDTH/(2*N)<<endl;
+//        cout << IPM_HEIGHT<<endl;
 
         //计算原图到逆透视图和逆透视图到原图的变换矩阵
         Mat warpMatrix_src2ipm;
         warpMatrix_src2ipm = getPerspectiveTransform(corners, corners_trans);
         warpPerspective(src, dst, warpMatrix_src2ipm, dst.size());
         //标出两组点
-        for(int i=0;i<4;i++)
-            circle(src,corners[i],5,Scalar(0,255,255),4);
-        //for(int i=0;i<4;i++)
-        //    circle(dst,corners_trans[i],5,Scalar(0,255,255),4);
+//        for(int i=0;i<4;i++)
+//            circle(src,corners[i],5,Scalar(0,255,255),4);
+//        for(int i=0;i<4;i++)
+//            circle(dst,corners_trans[i],5,Scalar(0,255,255),4);
 
-        imshow("img",src);
+ //       imshow("img",src);
         imshow("dst",dst);
 //        imwrite("../img/original123.jpg", img);
 //        imwrite("../img/original123.jpg", dst);
