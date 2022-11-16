@@ -116,16 +116,30 @@ bool executeimp(Mat src,Mat &dst,Point2d p1,Point2d p2,Point2d p3,
         float ROI_WIDTH=3750;
         //************************//
         //设定逆透视图的宽度
-        float IPM_WIDTH=500;
+//        float IPM_WIDTH=500;
+        float IPM_WIDTH=800;
         float N=5;
         //保证逆透视图的宽度大概为N个车头宽
         float sacale=(IPM_WIDTH/N)/ROI_WIDTH;
         float IPM_HEIGHT=ROI_HEIGHT * sacale;
 
+        //逆透视图初始化
+        dst = Mat::zeros(IPM_HEIGHT+50,IPM_WIDTH,src.type());
 
-//        cout << IPM_WIDTH/2-IPM_WIDTH/(2*N)<<endl;
-//        cout << IPM_WIDTH/2+IPM_WIDTH/(2*N)<<endl;
-//        cout << IPM_HEIGHT<<endl;
+        cout << "原图像大小" << src.size() <<endl;
+        cout << "变换后图像大小" << dst.size() <<endl;
+//        corners_trans[0] = Point2f(IPM_WIDTH/2-IPM_WIDTH/(2*N),IPM_HEIGHT);
+//        corners_trans[1] = Point2f(IPM_WIDTH/2-IPM_WIDTH/(2*N),0);
+//        corners_trans[2] = Point2f(IPM_WIDTH/2+IPM_WIDTH/(2*N),0);
+//        corners_trans[3] = Point2f(IPM_WIDTH/2+IPM_WIDTH/(2*N),IPM_HEIGHT);
+        corners_trans[0] = Point2f(IPM_WIDTH/2-IPM_WIDTH/(2*N),0);  //P2
+        corners_trans[1] = Point2f(IPM_WIDTH/2+IPM_WIDTH/(2*N),0);  //P3
+        corners_trans[2] = Point2f(IPM_WIDTH/2-IPM_WIDTH/(2*N),IPM_HEIGHT);   //P1
+        corners_trans[3] = Point2f(IPM_WIDTH/2+IPM_WIDTH/(2*N),IPM_HEIGHT);   //P4
+
+        cout << IPM_WIDTH/2-IPM_WIDTH/(2*N)<<endl;
+        cout << IPM_WIDTH/2+IPM_WIDTH/(2*N)<<endl;
+        cout << IPM_HEIGHT<<endl;
 
         //计算原图到逆透视图和逆透视图到原图的变换矩阵
         Mat warpMatrix_src2ipm;
@@ -137,7 +151,8 @@ bool executeimp(Mat src,Mat &dst,Point2d p1,Point2d p2,Point2d p3,
 //        for(int i=0;i<4;i++)
 //            circle(dst,corners_trans[i],5,Scalar(0,255,255),4);
 
- //       imshow("img",src);
+
+        imshow("img",src);
         imshow("dst",dst);
 //        imwrite("../img/original123.jpg", img);
 //        imwrite("../img/original123.jpg", dst);

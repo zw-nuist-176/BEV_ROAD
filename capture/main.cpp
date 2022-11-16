@@ -16,10 +16,16 @@ int main() {
         return -1;
     }
 
-    Point2d p1(484,412);
-    Point2d p2(150,602);
+    Point2d p4(484,412);
+    Point2d p1(150,602);
     Point2d p3(772,413);
-    Point2d p4(1089,648);
+    Point2d p2(1089,648);
+
+    //待定
+//    Point2d p1(339,301);
+//    Point2d p3(604,317);
+//    Point2d p4(142,434);
+//    Point2d p2(812,448);
     Mat frame,image;
     while(capture.read(frame)){
         char key = waitKey(10);
@@ -29,7 +35,7 @@ int main() {
         GetROI(frame, image);
         DetectRoadLine(frame, image);
         imshow("frame",frame);
-        //executeimp(frame, image, p1, p2, p3, p4);
+        executeimp(frame, image, p2, p1, p4, p3);
 
     }
     capture.release();
