@@ -10,17 +10,29 @@ using namespace cv;
 //获取兴趣范围
 
 void GetROI(Mat src, Mat &ROI) {
+    Mat ROI1;
     int width = src.cols;
     int height = src.rows;
+    //////////////////////////////////
+    Point2d p1(339,301);
+    Point2d p2(604,317);
+    Point2d p3(142,434);
+    Point2d p4(770,420);
+//    p3 C-------------p4 D
+//
+//    p1 A-------------p3 B
+
+    ///////////////////////////////////////
 
     vector<Point> pts;
     Point ptA((width / 8 ) * 0.5,(height / 20) * 19);
     Point ptB((width / 8 ) * 0.5,(height / 8) * 7);
-    Point ptC((width / 10 ) * 3,(height / 5) * 3);
+    Point ptC((width / 10 ) * 4,(height / 5) * 3);
     Point ptD((width / 10 ) * 7,(height / 5) * 3);
     Point ptE((width / 8 ) * 8,(height / 8) * 7);
     Point ptF((width / 8 ) * 8,(height / 20) * 19);
     pts = {ptA,ptB,ptC,ptD,ptE,ptF};
+
 
     vector<vector<Point>> ppts;
     ppts.push_back(pts);
@@ -29,7 +41,9 @@ void GetROI(Mat src, Mat &ROI) {
     fillPoly(mask,ppts,Scalar::all(255));
 
     src.copyTo(ROI,mask);
+    executeimp(ROI, ROI1, p1, p2, p3, p4);
     imshow("thresh1",ROI);
+
 }
 //分割道路线
 void DetectRoadLine(Mat src, Mat &ROI) {
@@ -46,8 +60,6 @@ void DetectRoadLine(Mat src, Mat &ROI) {
 //    第四个参数：double类型的maxval，当第五个参数的类型为CV_THRESH_BINARY或CV_THRESH_BINARY_INV时的最大值。
 //    第五个参数：int类型的type，阈值类型
     threshold(gray,thresh,180,255,THRESH_BINARY);
-
-
 
     imshow("ROI2",thresh);
     vector<Point> left_line;
@@ -85,16 +97,19 @@ void DetectRoadLine(Mat src, Mat &ROI) {
         circle(src,B_L,10,Scalar(0,0,255),-1 );
         circle(src,T_L,10,Scalar(0,255,0),-1 );
         circle(src,T_R,10,Scalar(255,0,0),-1 );
-        circle(src,B_R,10,Scalar(0,255,255),-1 );
+        circle(src,B_R,10,Scalar(128,0,128),-1 );
 
         line(src,Point(B_L),Point(T_L),Scalar(0,255,0),10);
-        line(src,Point(B_L),Point(T_L),Scalar(0,255,0),10);
+        line(src,Point(T_R),Point(B_R),Scalar(0,255,0),10);
 
         vector<Point> pts;
-        pts = {B_L,T_L,T_R,B_R};
+//        pts = {B_L,T_L,T_R,B_R};
+       pts = {B_L,T_L,T_R,B_R};
         vector<vector<Point>> ppts;
         ppts.push_back(pts);
-        fillPoly(src,ppts,Scalar(133,230,238));
+//        fillPoly(src,ppts,Scalar(133,230,238));
+        fillPoly(src,ppts,Scalar(50,205,50));
+//      addWeighted( src, 0.5,src, 0.5, 0,src);
 
     }
 
@@ -118,8 +133,20 @@ bool executeimp(Mat src,Mat &dst,Point2d p1,Point2d p2,Point2d p3,
         float N=5;
         //保证逆透视图的宽度大概为N个车头宽
         float sacale=(IPM_WIDTH/N)/ROI_WIDTH;
-        float IPM_HEIGHT=ROI_HEIGHT*sacale;
+        float IPM_HEIGHT=ROI_HEIGHT * sacale;
 
+        //逆透视图初始化
+        dst = Mat::zeros(IPM_HEIGHT+50,IPM_WIDTH,src.type());
+//        for(int i=0;i<4;i++)
+//            circle(src,corners[i],5,Scalar(55,55,55),4);
+
+        cout << "原图像大小" << src.size() <<endl;
+        cout << "变换后图像大小" << dst.size() <<endl;
+
+        corners_trans[0] = Point2f(IPM_WIDTH/2-IPM_WIDTH/(2*N),0);  //P2 A
+        corners_trans[1] = Point2f(IPM_WIDTH/2+IPM_WIDTH/(2*N),0);  //P3 B
+        corners_trans[2] = Point2f(IPM_WIDTH/2-IPM_WIDTH/(2*N),IPM_HEIGHT);   //P1 C
+        corners_trans[3] = Point2f(IPM_WIDTH/2+IPM_WIDTH/(2*N),IPM_HEIGHT);   //P4 D
 
         cout << IPM_WIDTH/2-IPM_WIDTH/(2*N)<<endl;
         cout << IPM_WIDTH/2+IPM_WIDTH/(2*N)<<endl;
@@ -128,17 +155,18 @@ bool executeimp(Mat src,Mat &dst,Point2d p1,Point2d p2,Point2d p3,
         //计算原图到逆透视图和逆透视图到原图的变换矩阵
         Mat warpMatrix_src2ipm;
         warpMatrix_src2ipm = getPerspectiveTransform(corners, corners_trans);
+//      cout<<warpMatrix_src2ipm<<endl;
         warpPerspective(src, dst, warpMatrix_src2ipm, dst.size());
-        //标出两组点
-        for(int i=0;i<4;i++)
-            circle(src,corners[i],5,Scalar(0,255,255),4);
-        //for(int i=0;i<4;i++)
-        //    circle(dst,corners_trans[i],5,Scalar(0,255,255),4);
+//        //标出两组点
+//        for(int i=0;i<4;i++)
+//            circle(src,corners[i],5,Scalar(0,255,255),4);
+//        for(int i=0;i<4;i++)
+//            circle(dst,corners_trans[i],5,Scalar(220,220,220),4);
+
 
         imshow("img",src);
         imshow("dst",dst);
-//        imwrite("../img/original123.jpg", img);
-//        imwrite("../img/original123.jpg", dst);
+
 
     }
     return true;
