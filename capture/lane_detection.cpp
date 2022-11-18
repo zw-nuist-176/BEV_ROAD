@@ -10,17 +10,25 @@ using namespace cv;
 //获取兴趣范围
 
 void GetROI(Mat src, Mat &ROI) {
+    Mat ROI1;
     int width = src.cols;
     int height = src.rows;
+    //////////////////////////////////
+    Point2d p4(484,412);
+    Point2d p1(150,602);
+    Point2d p3(772,413);
+    Point2d p2(1089,648);
+    ///////////////////////////////////////
 
     vector<Point> pts;
     Point ptA((width / 8 ) * 0.5,(height / 20) * 19);
     Point ptB((width / 8 ) * 0.5,(height / 8) * 7);
-    Point ptC((width / 10 ) * 3,(height / 5) * 3);
+    Point ptC((width / 10 ) * 4,(height / 5) * 3);
     Point ptD((width / 10 ) * 7,(height / 5) * 3);
     Point ptE((width / 8 ) * 8,(height / 8) * 7);
     Point ptF((width / 8 ) * 8,(height / 20) * 19);
     pts = {ptA,ptB,ptC,ptD,ptE,ptF};
+
 
     vector<vector<Point>> ppts;
     ppts.push_back(pts);
@@ -29,7 +37,9 @@ void GetROI(Mat src, Mat &ROI) {
     fillPoly(mask,ppts,Scalar::all(255));
 
     src.copyTo(ROI,mask);
+    executeimp(ROI, ROI1, p4, p3, p1, p2);
     imshow("thresh1",ROI);
+
 }
 //分割道路线
 void DetectRoadLine(Mat src, Mat &ROI) {
@@ -83,7 +93,6 @@ void DetectRoadLine(Mat src, Mat &ROI) {
         circle(src,B_L,10,Scalar(0,0,255),-1 );
         circle(src,T_L,10,Scalar(0,255,0),-1 );
         circle(src,T_R,10,Scalar(255,0,0),-1 );
-//        circle(src,B_R,10,Scalar(0,255,255),-1 );
         circle(src,B_R,10,Scalar(128,0,128),-1 );
 
         line(src,Point(B_L),Point(T_L),Scalar(0,255,0),10);
@@ -96,7 +105,7 @@ void DetectRoadLine(Mat src, Mat &ROI) {
         ppts.push_back(pts);
 //        fillPoly(src,ppts,Scalar(133,230,238));
         fillPoly(src,ppts,Scalar(50,205,50));
-//        addWeighted( src, 0.5,src, 0.5, 0,src);
+//      addWeighted( src, 0.5,src, 0.5, 0,src);
 
     }
 
@@ -144,6 +153,7 @@ bool executeimp(Mat src,Mat &dst,Point2d p1,Point2d p2,Point2d p3,
         //计算原图到逆透视图和逆透视图到原图的变换矩阵
         Mat warpMatrix_src2ipm;
         warpMatrix_src2ipm = getPerspectiveTransform(corners, corners_trans);
+//      cout<<warpMatrix_src2ipm<<endl;
         warpPerspective(src, dst, warpMatrix_src2ipm, dst.size());
         //标出两组点
 //        for(int i=0;i<4;i++)
@@ -154,8 +164,7 @@ bool executeimp(Mat src,Mat &dst,Point2d p1,Point2d p2,Point2d p3,
 
         imshow("img",src);
         imshow("dst",dst);
-//        imwrite("../img/original123.jpg", img);
-//        imwrite("../img/original123.jpg", dst);
+
 
     }
     return true;
