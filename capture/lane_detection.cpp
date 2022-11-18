@@ -14,10 +14,18 @@ void GetROI(Mat src, Mat &ROI) {
     int width = src.cols;
     int height = src.rows;
     //////////////////////////////////
+//    Point2d p4(484,412);
+//    Point2d p1(150,602);
+//    Point2d p3(772,413);
+//    Point2d p2(1089,648);    //////////////////////////////////
     Point2d p4(484,412);
     Point2d p1(150,602);
     Point2d p3(772,413);
     Point2d p2(1089,648);
+//    Point2d p1(339,301);
+//    Point2d p2(604,317);
+//    Point2d p3(142,434);
+//    Point2d p4(770,420);
     ///////////////////////////////////////
 
     vector<Point> pts;
@@ -125,7 +133,6 @@ bool executeimp(Mat src,Mat &dst,Point2d p1,Point2d p2,Point2d p3,
         float ROI_WIDTH=3750;
         //************************//
         //设定逆透视图的宽度
-//        float IPM_WIDTH=500;
         float IPM_WIDTH=800;
         float N=5;
         //保证逆透视图的宽度大概为N个车头宽
@@ -133,7 +140,9 @@ bool executeimp(Mat src,Mat &dst,Point2d p1,Point2d p2,Point2d p3,
         float IPM_HEIGHT=ROI_HEIGHT * sacale;
 
         //逆透视图初始化
-        dst = Mat::zeros(IPM_HEIGHT+50,IPM_WIDTH,src.type());
+        dst = Mat::zeros(IPM_HEIGHT-720,IPM_WIDTH-280,src.type());
+        for(int i=0;i<4;i++)
+            circle(src,corners[i],5,Scalar(55,55,55),4);
 
         cout << "原图像大小" << src.size() <<endl;
         cout << "变换后图像大小" << dst.size() <<endl;
@@ -155,11 +164,11 @@ bool executeimp(Mat src,Mat &dst,Point2d p1,Point2d p2,Point2d p3,
         warpMatrix_src2ipm = getPerspectiveTransform(corners, corners_trans);
 //      cout<<warpMatrix_src2ipm<<endl;
         warpPerspective(src, dst, warpMatrix_src2ipm, dst.size());
-        //标出两组点
+//        //标出两组点
 //        for(int i=0;i<4;i++)
 //            circle(src,corners[i],5,Scalar(0,255,255),4);
 //        for(int i=0;i<4;i++)
-//            circle(dst,corners_trans[i],5,Scalar(0,255,255),4);
+//            circle(dst,corners_trans[i],5,Scalar(220,220,220),4);
 
 
         imshow("img",src);
