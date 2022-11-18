@@ -26,6 +26,10 @@ void GetROI(Mat src, Mat &ROI) {
     Point2d p2(604,317);
     Point2d p3(142,434);
     Point2d p4(770,420);
+//    p3 C-------------p4 D
+//
+//    p1 A-------------p3 B
+
     ///////////////////////////////////////
 
     vector<Point> pts;
@@ -141,8 +145,8 @@ bool executeimp(Mat src,Mat &dst,Point2d p1,Point2d p2,Point2d p3,
 
         //逆透视图初始化
         dst = Mat::zeros(IPM_HEIGHT+50,IPM_WIDTH,src.type());
-        for(int i=0;i<4;i++)
-            circle(src,corners[i],5,Scalar(55,55,55),4);
+//        for(int i=0;i<4;i++)
+//            circle(src,corners[i],5,Scalar(55,55,55),4);
 
         cout << "原图像大小" << src.size() <<endl;
         cout << "变换后图像大小" << dst.size() <<endl;
