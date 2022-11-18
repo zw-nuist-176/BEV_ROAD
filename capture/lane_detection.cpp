@@ -14,14 +14,6 @@ void GetROI(Mat src, Mat &ROI) {
     int width = src.cols;
     int height = src.rows;
     //////////////////////////////////
-//    Point2d p4(484,412);
-//    Point2d p1(150,602);
-//    Point2d p3(772,413);
-//    Point2d p2(1089,648);
-//    Point2d p4(484,412);
-//    Point2d p1(150,602);
-//    Point2d p3(772,413);
-//    Point2d p2(1089,648);
     Point2d p1(339,301);
     Point2d p2(604,317);
     Point2d p3(142,434);
@@ -150,10 +142,7 @@ bool executeimp(Mat src,Mat &dst,Point2d p1,Point2d p2,Point2d p3,
 
         cout << "原图像大小" << src.size() <<endl;
         cout << "变换后图像大小" << dst.size() <<endl;
-//        corners_trans[0] = Point2f(IPM_WIDTH/2-IPM_WIDTH/(2*N),IPM_HEIGHT);
-//        corners_trans[1] = Point2f(IPM_WIDTH/2-IPM_WIDTH/(2*N),0);
-//        corners_trans[2] = Point2f(IPM_WIDTH/2+IPM_WIDTH/(2*N),0);
-//        corners_trans[3] = Point2f(IPM_WIDTH/2+IPM_WIDTH/(2*N),IPM_HEIGHT);
+
         corners_trans[0] = Point2f(IPM_WIDTH/2-IPM_WIDTH/(2*N),0);  //P2 A
         corners_trans[1] = Point2f(IPM_WIDTH/2+IPM_WIDTH/(2*N),0);  //P3 B
         corners_trans[2] = Point2f(IPM_WIDTH/2-IPM_WIDTH/(2*N),IPM_HEIGHT);   //P1 C
